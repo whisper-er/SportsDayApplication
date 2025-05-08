@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'jacoco'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+
+repositories {
+	mavenCentral()
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // For JWT API
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5' // Implementation of the API
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Jackson integration
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
+	implementation 'org.springframework.security:spring-security-config'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot2:1.7.0'
+	implementation 'org.springframework.security:spring-security-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'software.amazon.awssdk:dynamodb:2.20.0'
+    implementation 'software.amazon.awssdk:auth:2.20.0'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.4.0'
+	testImplementation 'org.mockito:mockito-core:5.4.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport 
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
